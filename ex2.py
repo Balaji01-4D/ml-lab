@@ -2,6 +2,10 @@ import csv
 import pandas as pd
 import math
 import numpy as np
+from rich import print as pprint
+import warnings
+
+warnings.filterwarnings('ignore')
 
 def read_file(file_name: str):
     """return column name and other datas"""
@@ -47,6 +51,7 @@ def subtables(data: np.ndarray, col: int, delete: bool):
                 pos += 1
         if delete:
             dic[items[x]] = np.delete(dic[items[x]], col, 1)
+    
     return items, dic
 
 
@@ -63,7 +68,6 @@ def entropy(s):
         counts[x] = sum(s == items[x]) / (s.size * 1.0)
     for count in counts:
         sums += -1 * count * math.log(count, 2)
-
     return sums
 
 
@@ -74,7 +78,6 @@ def gain_ratio(data: np.ndarray, col: int):
     total_size = data.shape[0]
     entropies = np.zeros((items.shape[0], 1))
     intrinsic = np.zeros((items.shape[0], 1))
-
     for x in range(items.shape[0]):
         ratio = dic[items[x]].shape[0] / (total_size * 1.0)
         entropies[x] = ratio * entropy(dic[items[x]][:, -1])
