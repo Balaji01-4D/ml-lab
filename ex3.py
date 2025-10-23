@@ -1,17 +1,9 @@
 import numpy as np
 
-x =  np.array([
-    [2,9],
-    [1,5],
-    [3,6]
-], dtype=float)
+x = np.array([[2, 9], [1, 5], [3, 6]], dtype=float)
 
 
-y = np.array([
-    [92],
-    [86],
-    [89]
-], dtype=float)
+y = np.array([[92], [86], [89]], dtype=float)
 
 """amax function return maximum of array 
 if the axis = 0 -> return maximum among the each column
@@ -24,6 +16,7 @@ x = x / np.amax(x, axis=0)
 """
 
 y = y / 100
+
 
 class NeuralNetwork(object):
 
@@ -48,16 +41,17 @@ class NeuralNetwork(object):
         o = self.sigmoid(self.z3)
 
         return o
-    
+
     def sigmoid(self, s):
         return 1 / (1 + np.exp(-s))
+
     """ np.exp function is a exponential function to np.exp(1) -> e^1 (e power 1)
         np.exp([1,2]) -> [e^1, e^2] 
     """
-    
+
     def sigmoid_prime(self, s):
-        return s*(1-s)
-    
+        return s * (1 - s)
+
     def backward(self, x: np.ndarray, y, o):
         self.o_error = y - o
         self.o_delta: np.ndarray = self.o_error * self.sigmoid_prime(o)

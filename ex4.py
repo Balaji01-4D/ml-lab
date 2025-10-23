@@ -13,23 +13,23 @@ print("the first 5 values of train data\n", x.head())
 
 
 y = data.iloc[:, -1]
-print("\nthe first 5 values of train data are: \n",y.head())
+print("\nthe first 5 values of train data are: \n", y.head())
 
 
 """It maps each unique category (label) in a column to a unique integer
 ['Sunny', 'Rain', 'Overcast', 'Sunny', 'Rain'] → [2, 1, 0, 2, 1]
 """
 le_outlook = LabelEncoder()
-x['Outlook'] = le_outlook.fit_transform(x['Outlook'])
+x["Outlook"] = le_outlook.fit_transform(x["Outlook"])
 
 le_temp = LabelEncoder()
-x['Temperature'] = le_temp.fit_transform(x['Temperature'])
+x["Temperature"] = le_temp.fit_transform(x["Temperature"])
 
 le_humidity = LabelEncoder()
-x['Humidity'] = le_humidity.fit_transform(x['Humidity'])
+x["Humidity"] = le_humidity.fit_transform(x["Humidity"])
 
 le_windy = LabelEncoder()
-x['Wind'] = le_windy.fit_transform(x['Wind'])
+x["Wind"] = le_windy.fit_transform(x["Wind"])
 
 
 print("\nNow the Train data is:\n", x.head())
@@ -40,9 +40,7 @@ y = le_play.fit_transform(y)
 print("\nNow the Train output is:\n", y)
 
 
-x_train, x_test, y_train, y_test = train_test_split(
-    x, y, test_size=0.20
-)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20)
 
 
 classifier = GaussianNB()

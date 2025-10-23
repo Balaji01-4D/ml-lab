@@ -11,4 +11,4 @@ try:
     repose = requests.get(url)
     print("notication sent", reponse.status_code)
 except Exception as e:
-    print("error ",e)
+    print("error ", e)
