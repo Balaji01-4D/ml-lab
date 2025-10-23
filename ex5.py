@@ -25,6 +25,10 @@ model.fit(xTrain_dm, y_train)
 
 pred = model.predict(xTest_dm)
 
+for doc, p in zip(x, pred):
+    p = 'pos' if p == 1 else 'neg'
+    print(f"{doc} -> {p}")
+
 
 from sklearn.metrics import precision_score, accuracy_score, confusion_matrix, recall_score
 print("Accuracy scores: ")
