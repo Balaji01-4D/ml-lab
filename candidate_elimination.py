@@ -1,66 +1,72 @@
+import numpy as np
 import pandas as pd
 
+# Loading Data from a CSV File
+data = pd.DataFrame(data=pd.read_csv('trainingdata.csv'))
+print(data)
 
-def candidate_elimination(df: pd.DataFrame):
-    """
-    if output is yes -> check for empty specific_h if emty
-                            then assign with current row data
-                     -> otherwise compare specific_h and current row data if it is different,
-                            then replace with "?"
-                                    keep the remaining same
+# Separating concept features from Target
+concepts = np.array(data.iloc[:, 0:-1])
+print(concepts)
 
-    if output is no -> iterate each if specific_h[i] != current row data[i] then
-                        make the general_h[i][i] = specific_h (which is different form the current row)
-    """
+# Isolating target into a separate DataFrame
+# copying last column to target array
+target = np.array(data.iloc[:, -1])
+print(target)
 
-    n = df.columns.size - 1
 
-    specific_h = []
-    general_h = [["?" for i in range(n)] for i in range(n)]
+def learn(concepts, target):
+    '''
+    learn() function implements the learning method of the Candidate elimination algorithm.
+    Arguments:
+    concepts - a data frame with all the features
+    target - a data frame with corresponding output values
+    '''
+    # Initialise S0 with the first instance from concepts
+    # .copy() makes sure a new list is created instead of just pointing to the same memory
+    specific_h = concepts[0].copy()
+    print("\nInitialization of specific_h and general_h")
+    print(specific_h)
 
-    for i, row in df.iterrows():
+    # Initialize G with maximally general hypotheses (diagonal form per your style)
+    general_h = [["?" for _ in range(len(specific_h))] for _ in range(len(specific_h))]
+    print(general_h)
 
-        output = row.iloc[-1]
-        """getting output means a last column"""
-        data = row.iloc[: len(row) - 1].tolist()
-        """data which is except the last column"""
+    # The learning iterations
+    for i, h in enumerate(concepts):
+        # Checking if the hypothesis has a positive target
+        if target[i] == "Yes":
+            for x in range(len(specific_h)):
+                # Change values in S & G only if values change
+                if h[x] != specific_h[x]:
+                    specific_h[x] = '?'
+                    general_h[x][x] = '?'
 
-        if output == "yes":
-
-            if not specific_h:
-                specific_h = data
-                continue
-
-            specific_h = [
-                specific_h[i] if specific_h[i] == data[i] else "?" for i in range(n)
-            ]
-
-        else:
-
-            for x in range(n):
-                if specific_h[x] != data[x]:
+        # Checking if the hypothesis has a negative target
+        if target[i] == "No":
+            for x in range(len(specific_h)):
+                # For negative hypothesis change values only in G
+                if h[x] != specific_h[x]:
                     general_h[x][x] = specific_h[x]
+                else:
+                    general_h[x][x] = '?'
 
-    general_h_without_duplicate = []
-    for i in general_h:
-        for j in i:
-            if j != "?":
-                general_h_without_duplicate.append(i)
+        print("\nSteps of Candidate Elimination Algorithm", i + 1)
+        print(specific_h)
+        print(general_h)
 
-    return specific_h, general_h_without_duplicate
+    # find indices where we have empty rows, meaning those that are unchanged
+    empty_row = ['?'] * len(specific_h)
+    indices = [i for i, val in enumerate(general_h) if val == empty_row]
+    for _ in indices:
+        # remove those rows from general_h
+        if empty_row in general_h:
+            general_h.remove(empty_row)
+
+    # Return final values
+    return specific_h, general_h
 
 
-df = pd.read_csv("./candidate_elimination_dataset.csv")
-
-specific, general = candidate_elimination(df)
-
-print(specific)
-print(general)
-
-""" DATASET
-sky,temperature,humid,wind,water,forest,output
-sunny,warm,normal,strong,warm,same,yes
-sunny,warm,high,strong,warm,same,yes
-rainy,cold,high,strong,warm,change,no
-sunny,warm,high,strong,cool,change,yes
-"""
+s_final, g_final = learn(concepts, target)
+print("\nFinal Specific_h:", s_final, sep="\n")
+print("\nFinal General_h:", g_final, sep="\n")

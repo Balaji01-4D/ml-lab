@@ -1,0 +1,5 @@
+sky,temperature,humid,wind,water,forest,output
+sunny,warm,normal,strong,warm,same,Yes
+sunny,warm,high,strong,warm,same,Yes
+rainy,cold,high,strong,warm,Change,No
+sunny,warm,high,strong,cool,Change,Yes
